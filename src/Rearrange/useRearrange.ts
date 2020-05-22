@@ -202,42 +202,41 @@ export const useRearrange = (
   const removeNodeAction = (layout: Layout, id: number) =>
     setAction(ACTIONS.REMOVE, layout, id);
 
-  const mapOffsets = () =>
-    block([
-      // call([], () => console.log('-----BEFORE-----')),
-      // logAction(action, actionData),
-      // offsets.map(logOffset),
-      offsets.map((offset, index) => {
-        const prevOffset = offsets[index - 1] ? offsets[index - 1] : null;
-        const nextOffset = offsets[index + 1] ? offsets[index + 1] : null;
-        return block([
-          cond(
-            eq(action, ACTIONS.ADD),
-            handleAddAction(
-              prevOffset,
-              offset,
-              inputBoxLayout,
-              action,
-              actionData
-            )
-          ),
-          cond(
-            eq(action, ACTIONS.REMOVE),
-            handleRemoveAction(
-              nextOffset,
-              offset,
-              inputBoxLayout,
-              action,
-              actionData
-            )
-          ),
-        ]);
-      }),
-      // call([], () => console.log('-----AFTER-----')),
-      // offsets.map(logOffset),
-    ]);
+  const mapOffsetsForAction = block([
+    // call([], () => console.log('-----BEFORE-----')),
+    // logAction(action, actionData),
+    // offsets.map(logOffset),
+    offsets.map((offset, index) => {
+      const prevOffset = offsets[index - 1] ? offsets[index - 1] : null;
+      const nextOffset = offsets[index + 1] ? offsets[index + 1] : null;
+      return block([
+        cond(
+          eq(action, ACTIONS.ADD),
+          handleAddAction(
+            prevOffset,
+            offset,
+            inputBoxLayout,
+            action,
+            actionData
+          )
+        ),
+        cond(
+          eq(action, ACTIONS.REMOVE),
+          handleRemoveAction(
+            nextOffset,
+            offset,
+            inputBoxLayout,
+            action,
+            actionData
+          )
+        ),
+      ]);
+    }),
+    // call([], () => console.log('-----AFTER-----')),
+    // offsets.map(logOffset),
+  ]);
 
-  useCode(() => block([mapOffsets()]), [inputBoxLayout]);
+  useCode(() => block([mapOffsetsForAction]), [inputBoxLayout]);
 
   return { offsets, addNodeAction, removeNodeAction };
 };

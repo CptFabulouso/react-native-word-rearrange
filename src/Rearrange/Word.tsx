@@ -82,11 +82,11 @@ const Word = ({ id, word, offsets, addNode, removeNode }: WordProps) => {
     () =>
       block([
         set(isSelected, 0),
-        offsets.map((off) =>
+        offsets.map((offset) =>
           block([
-            cond(eq(off.id, id), [
-              set(offsetX, off.x),
-              set(offsetY, off.y),
+            cond(eq(offset.id, id), [
+              set(offsetX, offset.x),
+              set(offsetY, offset.y),
               set(isSelected, 1),
             ]),
           ])
