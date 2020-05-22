@@ -1,6 +1,6 @@
-import Animated from 'react-native-reanimated';
-import { useValue } from 'react-native-redash';
-import { useMemoOne } from 'use-memo-one';
+import Animated from "react-native-reanimated";
+import { useValue } from "react-native-redash";
+import { useMemoOne } from "use-memo-one";
 
 const {
   add,
@@ -29,6 +29,12 @@ export type Layout = {
   height: number;
 };
 
+export const ACTIONS = {
+  NONE: 0,
+  ADD: 1,
+  REMOVE: 2,
+};
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const logAction = (actionType: Animated.Value<number>, actionData: Offset) =>
   call(
@@ -50,7 +56,7 @@ const logAction = (actionType: Animated.Value<number>, actionData: Offset) =>
           width,
           height,
         },
-      }),
+      })
   );
 
 const log = ([i, id, x, y, width, height]: readonly number[]) => {
@@ -71,7 +77,7 @@ const logOffset = (offset: Offset, i: number) =>
       offset.width,
       offset.height,
     ],
-    log,
+    log
   );
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -80,7 +86,7 @@ const handleRemoveAction = (
   offset: Offset,
   inputBoxLayout: Layout,
   action: Animated.Value<number>,
-  actionData: Offset,
+  actionData: Offset
 ) => {
   if (nextOffset) {
     return [
@@ -92,7 +98,7 @@ const handleRemoveAction = (
           [
             set(offset.y, add(offset.y, actionData.height)),
             set(offset.x, inputBoxLayout.x),
-          ],
+          ]
         ),
         set(offset.width, nextOffset.width),
         set(offset.id, nextOffset.id),
@@ -113,7 +119,7 @@ const handleAddAction = (
   offset: Offset,
   inputBoxLayout: Layout,
   action: Animated.Value<number>,
-  actionData: Offset,
+  actionData: Offset
 ) => {
   let prevOffsetCalc;
   if (prevOffset) {
@@ -121,7 +127,7 @@ const handleAddAction = (
       cond(
         greaterThan(
           add(prevOffset.x, prevOffset.width, actionData.width),
-          inputBoxLayout.width,
+          inputBoxLayout.width
         ),
         [
           set(offset.y, add(prevOffset.y, actionData.height)),
@@ -130,7 +136,7 @@ const handleAddAction = (
         [
           set(offset.y, prevOffset.y),
           set(offset.x, add(prevOffset.x, prevOffset.width)),
-        ],
+        ]
       ),
       set(offset.id, actionData.id),
       set(offset.width, actionData.width),
@@ -149,16 +155,10 @@ const handleAddAction = (
   return cond(eq(offset.id, -1), prevOffsetCalc);
 };
 
-const ACTIONS = {
-  NONE: 0,
-  ADD: 1,
-  REMOVE: 2,
-};
-
 export const useRearrange = (
   words: Array<any>,
   inputBoxLayout: Layout,
-  callback: (action: number, data: number) => void,
+  callback: (action: number, data: number) => void
 ) => {
   const action = useValue(ACTIONS.NONE);
   const actionData = useMemoOne(
@@ -169,7 +169,7 @@ export const useRearrange = (
       width: new Value(0),
       height: new Value(0),
     }),
-    [],
+    []
   );
   const offsets = useMemoOne(
     () =>
@@ -180,7 +180,7 @@ export const useRearrange = (
         width: new Value(0),
         height: new Value(0),
       })),
-    [],
+    []
   );
 
   const setAction = (actionType: number, layout: Layout, id: number) =>
@@ -218,8 +218,8 @@ export const useRearrange = (
               offset,
               inputBoxLayout,
               action,
-              actionData,
-            ),
+              actionData
+            )
           ),
           cond(
             eq(action, ACTIONS.REMOVE),
@@ -228,8 +228,8 @@ export const useRearrange = (
               offset,
               inputBoxLayout,
               action,
-              actionData,
-            ),
+              actionData
+            )
           ),
         ]);
       }),
